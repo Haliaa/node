@@ -10,5 +10,34 @@
 const {createUser} = require('./services/user.service')
 require('./services/file.service')
 
+const fs = require('fs')
+
 const user1 = createUser('Emily', 23);
 console.log(user1);
+
+// fs.mkdir('./allFlattenFiles',(err)=>{
+//     err && console.log(err)
+// })
+
+fs.readdir('./', (err, files) => {
+    err && console.log(err)
+
+    for (const file of files) {
+        fs.stat(`././${file}`,(err1, stats) => {
+            if(stats.isDirectory() && file != '.idea' && file != '.git'){
+                fs.readdir(`././${file}`, (err, files) => {
+                    if (err) {
+                        console.log(err)
+                        return;
+                    }
+                    for (const filyk of files) {
+                        fs.rename(`./${file}/${filyk}`, `./allFlattenFiles/${filyk}`, err => {
+                            err && console.log(err)
+                        })
+                        console.log(filyk)
+                    }
+                })
+            }
+        })
+    }
+})
