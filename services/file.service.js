@@ -6,6 +6,12 @@ const fs = require('fs')
 //     if(err){console.log(err);}
 // })
 
+// //стирає лише  file
+// fs.unlink('./data.txt')...
+
+// //стирає лише  directory (папку) БЕЗ файлів
+// fs.rmdir('./services')...
+
 //перезаписує
 // fs.writeFile('./data.txt', 'HELLO NODE', (err)=>{
 //     if(err){console.log(err);}
