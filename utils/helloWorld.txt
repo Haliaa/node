@@ -1,1 +1,3 @@
 console.log('moved successfully')
+console.log('moved successfully')
+console.log('moved successfully')
