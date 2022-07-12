@@ -1,14 +1,21 @@
-//mkdir services - (в консолі) - створить папку services
-//.. - (в консолі) - папку назад
-//dir - (в консолі) - виводить всі файли папки
-//rmdir services - (в консолі) - видаляє папку services
-// cd- change directory
-//KISS- keep it simple(пекти  хліб)
-//YAGNI- You aren`t gonna need it (то шо не треба стираємо)
-//SOLID- розділяти на модулі, сервіси, підфайли
+const express = require("express")
+const userRouter = require('./routes/user.router')
 
-const {createUser} = require('./services/user.service')
-require('./services/file.service')
+const app = express();
 
-const user1 = createUser('Emily', 23);
-console.log(user1);
+app.use(express.json())
+app.use(express.urlencoded({extended:true})) //без того буде бачити пустий об'єкт(в консолі: {})
+
+app.use('/users', userRouter)
+
+app.use('*', (req, res)=>{
+    res.status(404).json('Route not found')
+})
+
+app.listen(5000)
+
+// app.get('/users', userController.getUsers)
+// app.get('/users/:id',userController.getUser)
+// app.post('/users',userController.postUser)
+// app.delete('/users/:id',userController.deleteUser)
+// app.put('/users/:id',userController.updateUser)
