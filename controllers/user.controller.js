@@ -1,55 +1,58 @@
-const users = require('../dataBase/users');
+const User = require('../dataBase/User');
+const users = require("../dataBase/users");
+const CError = require('../error/CustomError')
 
 module.exports = {
-    getUsers: (req, res) => {
+    getUsers: async (req, res, next) => {
         try {
-            res.status(201).json(users)
-        } catch (e) {
-            res.status(400).json(e.message || 'Unknown Error')
-        }
-    },
-    getUser: (req, res) => {
-        try {
-            const {id} = req.params
-            const {model = ''} = req.query;
-            const modelToFind = model.split(';')
-            console.log('#######################')
-            console.log(modelToFind)
-            console.log('#######################')
+            const users = await User.find();
 
-            res.status(201).json(users[id])
+            res.json(users);
         } catch (e) {
-            res.status(400).json(e.message || 'Unknown Error')
+            next(e)
         }
     },
-    postUser: (req, res) => {
+    getUser: async (req, res, next) => {
         try {
-            console.log(req.body);
-            res.status(201).json('User was created')
+            const {userId = ''} = req.params;
+
+            if (userId.length !== 24) {       //довжина id в mongo дорівнює 24 символи
+                throw new CError('User ID is not valid', 403)
+            }
+
+            // const user =  await User.findById(userId)
+            const user = await User.findOne({_id: userId})
+
+            if (!user) {
+                throw new CError(`User with Id ${userId} is not found`, 404)
+            }
+            res.json(user)
         } catch (e) {
-            res.status(400).json(e.message || 'Unknown Error')
+            next(e)
         }
     },
-    deleteUser: (req, res) => {
+    postUser: async (req, res, next) => {
         try {
-            users.push({
-                name: 'Test',
-                age: Math.random() * 100
-            })
-            res.status(201).json('User was created')
+            const user = await User.create(req.body)
+            res.status(201).json(user)
         } catch (e) {
-            res.status(400).json(e.message || 'Unknown Error')
+            next(e)
         }
     },
-    updateUser: (req, res) => {
+    deleteUser: async (req, res, next) => {
         try {
-            users.push({
-                name: 'Test',
-                age: Math.random() * 100
-            })
-            res.status(201).json('User was created')
+            const {userId = ''} = req.params;
+            await User.deleteOne({_id: userId})
+            res.status(201).json('User was deleted')
         } catch (e) {
-            res.status(400).json(e.message || 'Unknown Error')
+            next(e)
+        }
+    },
+    updateUser: async (req, res, next) => {
+        try {
+            res.status(201).json('Users was created');
+        } catch (e) {
+            next(e)
         }
     }
 }

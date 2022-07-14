@@ -1,4 +1,8 @@
-const express = require("express")
+const express = require('express')
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost:27017/dec');
+
 const userRouter = require('./routes/user.router')
 
 const app = express();
@@ -6,13 +10,24 @@ const app = express();
 app.use(express.json())
 app.use(express.urlencoded({extended:true})) //без того буде бачити пустий об'єкт(в консолі: {})
 
-app.use('/users', userRouter)
+app.use('/users', userRouter);
+
+//всі ерори злітаються сюди:
+app.use((err, req,res,next)=>{
+    res
+        .status(err.status || 500)
+        .json({
+            error:err.message || 'Unknown error',
+            code:err.status || 400
+        })
+})
 
 app.use('*', (req, res)=>{
     res.status(404).json('Route not found')
 })
 
-app.listen(5000)
+app.listen(5000,()=>{
+  console.log(  `Server listen port 5000`)})
 
 // app.get('/users', userController.getUsers)
 // app.get('/users/:id',userController.getUser)

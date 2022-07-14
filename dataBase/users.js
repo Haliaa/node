@@ -1,8 +1,6 @@
 module.exports = [
-    {name:'Sandokan'},
-    {name:'Janez'},
-    {name:'Marianna'},
-    {name:'Kamemuri'},
-    {name:'Tiger'},
-    {name:'Parrot'}
-]
+  { name: 'Viktor' },
+  { name: 'Karina' },
+  { name: 'Dima' },
+  { name: 'Igor' },
+];
