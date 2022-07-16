@@ -1,6 +1,6 @@
 const User = require('../dataBase/User');
-const users = require("../dataBase/users");
 const CError = require('../error/CustomError')
+const {hashPassword} = require("../services/password.service");
 
 module.exports = {
     getUsers: async (req, res, next) => {
@@ -17,6 +17,7 @@ module.exports = {
             const {userId = ''} = req.params;
 
             if (userId.length !== 24) {       //довжина id в mongo дорівнює 24 символи
+                // noinspection ExceptionCaughtLocallyJS
                 throw new CError('User ID is not valid', 403)
             }
 
@@ -24,6 +25,7 @@ module.exports = {
             const user = await User.findOne({_id: userId})
 
             if (!user) {
+                // noinspection ExceptionCaughtLocallyJS
                 throw new CError(`User with Id ${userId} is not found`, 404)
             }
             res.json(user)
@@ -33,7 +35,9 @@ module.exports = {
     },
     postUser: async (req, res, next) => {
         try {
-            const user = await User.create(req.body)
+            const hashedPassword = await hashPassword(req.body.password);
+            const user = await User.create({...req.body, password:hashedPassword});
+
             res.status(201).json(user)
         } catch (e) {
             next(e)

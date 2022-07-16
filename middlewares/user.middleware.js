@@ -1,21 +1,31 @@
 const CError = require('../error/CustomError') //CustomError
+const userValidator = require('../validators/user.validator')
+const User = require('../dataBase/User')
 
 module.exports = {
-    checkUserOnCreate: (req, res, next)=>{
+    isNewUserValid: (req, res, next) => {
         try {
-            const {name='', age=0, email='', password=''} = req.body;
-
-            if(!name || !password || !email){
-                throw new CError('Some field is missed')
+            const {error, value} = userValidator.newUserValidator.validate(req.body);
+            if (error) {
+                throw new CError(error.details[0].message)
             }
-
-            if(password.length <5){
-                throw new CError('Password should include at least 5 symbols')
+            console.log(value); // value це вже провалідовані joi коректні дані
+            req.body = value; //тепер body точно коректний віддаємо дальше
+            next()
+        } catch (e) {
+            next(e)
+        }
+    },
+    isEmailRegistered: async (req, res, next) => {
+        try {
+            const {email} = req.body;
+            const userByEmail = await User.findOne({email});
+            if(userByEmail){
+                throw new CError('User with such email is already existed',409)
             }
             next()
-
-        }catch (e) {
-            res.status(400).json(e.message)
+        } catch (e) {
+            next(e)
         }
     }
 }
