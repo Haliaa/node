@@ -1,21 +1,28 @@
 const userService = require("../services/user.service");
+const passwordService = require('../services/password.service')
+const {userPresenter} = require('../presenters/user.presenter')
 
 module.exports = {
     getUsers: async (req, res, next) => {
         try {
-            const users = await userService.findUsers()
-            res.json(users)
+            console.log(req.query)
+            const users = await userService.findUsers(req.query).exec();
+
+            const usersForResponse = users.map(u => userPresenter(u));
+
+            res.json(usersForResponse);
         } catch (e) {
             next(e)
         }
     },
     postUsers: async (req, res, next) => {
         try {
-            const newUser = await userService.createUser(req.body)
 
+            const hash = await passwordService.hashPassword(req.body.password)
+            const newUser = await userService.createUser({...req.body, password: hash})
+            const userForResponse = userPresenter(newUser);
 
-            res.json(newUser)
-            next()
+            res.status(201).json(userForResponse);
         } catch (e) {
             next(e)
         }
@@ -23,7 +30,10 @@ module.exports = {
     getUser: async (req, res, next) => {
         try {
             const {user} = req;
-            res.json(user)
+
+            const userForResponse = userPresenter(user)
+
+            res.json(userForResponse)
         } catch (e) {
             next(e)
         }
@@ -31,9 +41,10 @@ module.exports = {
     deleteUser: async (req, res, next) => {
         try {
             const {id} = req.params;
-            await userService.deleteUser({_id:id})
 
-            res.sendStatus(204)
+            await userService.deleteUser({_id: id})
+
+            res.sendStatus(204);
         } catch (e) {
             next(e)
         }
@@ -41,8 +52,10 @@ module.exports = {
     updateUser: async (req, res, next) => {
         try {
             const {id} = req.params;
-            const updatedUser = await userService.updateUser({_id:id},req.dateForUpdate)
-            res.status(201).json(updatedUser)
+            const updatedUser = await userService.updateUser({_id: id}, req.body);
+            const userForResponse = userPresenter(updatedUser);
+
+            res.status(201).json(userForResponse);
         } catch (e) {
             next(e)
         }

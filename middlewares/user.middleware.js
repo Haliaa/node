@@ -1,5 +1,7 @@
 const CError = require('../errors/CustomError');
 const userService = require('../services/user.service');
+const userValidator = require('../validators/user.validator');
+const queryValidator = require('../validators/query.validaor');
 
 module.exports = {
     isUserPresent: async (req, res, next) => {
@@ -33,20 +35,11 @@ module.exports = {
     },
     isUserValidForPost: async (req, res, next) => {
         try {
-            const {name, email, age, password} = req.body;
-            if (!age || !Number.isInteger(age) || age < 18) {
-                return next(new CError('Set valid age'))
+            const {error, value} = userValidator.newUserValidator.validate(req.body);
+            if (error) {
+                return next(new CError(error.details[0].message))
             }
-            if (!name || name.length < 3) {
-                return next(new CError('Set valid name'))
-            }
-            if (!email || !email.includes('@')) {
-                return next(new CError('Set valid email'))
-            }
-            if (!password || password.length < 5) {
-                return next(new CError('Set valid password'))
-            }
-
+            req.body = value;
             next()
         } catch (e) {
             next(e)
@@ -54,15 +47,25 @@ module.exports = {
     },
     isUserValidForUpdate: async (req, res, next) => {
         try {
-            const {name, age} = req.body;
-           if (age && !Number.isInteger(age) || age < 18) {
-                next(new CError('Set valid age'))
+            const {error, value} = userValidator.updateUserValidator.validate(req.body);
+            if (error) {
+                return next(new CError(error.details[0].message))
             }
-            if (name && name.length < 3) {
-                return res.status(400).json('Set valid name')
-            }
-            req.dateForUpdate = {name, age}
+            req.body = value;
+            next()
+        } catch (e) {
+            next(e)
+        }
+    },
+    isUserQueryValid: async (req, res, next) => {
+        try {
+            const {error, value} = queryValidator.findAll.validate(req.query);
 
+            if (error) {
+                return next(new CError(error.details[0].message))
+            }
+
+            req.query = value;
             next()
         } catch (e) {
             next(e)
