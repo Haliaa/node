@@ -9,12 +9,14 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/dec');
 
 const userRouter = require('./routes/user.router')
+const authRouter = require('./routes/auth.router')
 
 const app = express();
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true})) //без того буде бачити пустий об'єкт(в консолі: {})
 
+app.use('/auth', authRouter);
 app.use('/users', userRouter);
 
 //всі ерори злітаються сюди:
