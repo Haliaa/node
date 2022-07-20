@@ -6,4 +6,8 @@ router.post('/login',
     authMiddleware.isUserPresentForAuth,
     authController.login)
 
+router.post('/refreshToken',
+    authMiddleware.checkRefreshToken,
+    authController.refreshToken)
+
 module.exports = router;

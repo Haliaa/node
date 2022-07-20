@@ -26,6 +26,28 @@ module.exports = {
       next(e);
     }
   },
+  checkRefreshToken: async (req, res, next) => {
+    try {
+      const refresh_token = req.get('Authorization');
+
+      if (!refresh_token) {
+        return next(new CError('No token', 401));
+      }
+
+      checkAccessToken(refresh_token);
+
+      const tokenInfo = await OAuth.findOne({refresh_token})
+
+      if (!tokenInfo) {
+        return next(new CError('Token not valid', 401));
+      }
+
+      req.tokenInfo = tokenInfo;
+      next();
+    } catch (e) {
+      next(e);
+    }
+  },
 
   isUserPresentForAuth: async (req, res, next) => {
     try {

@@ -24,5 +24,22 @@ module.exports = {
     } catch (e) {
       next(e)
     }
+  },
+  refreshToken: async (req, res, next) => {
+    try {
+
+      const {userId} = req.tokenInfo;
+      console.log(userId)
+      const tokens = generateAuthTokens();
+
+      // await OAuth.create({
+      //   userId: _id,
+      //   ...tokens
+      // })
+
+      res.json(tokens);
+    } catch (e) {
+      next(e)
+    }
   }
 };
