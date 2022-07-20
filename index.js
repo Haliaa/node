@@ -1,5 +1,6 @@
 const express = require("express");
 const userRouter = require('./routes/user.router')
+const authRouter = require('./routes/auth.router')
 const mongoose = require("mongoose");
 
 const app = express();
@@ -11,6 +12,7 @@ mongoose.connect('mongodb://localhost:27017/dec')
 
 
 app.use('/users', userRouter)
+app.use('/auth', authRouter)
 
 //всі ерори злітаються сюди:
 app.use((err, req,res,next)=>{
