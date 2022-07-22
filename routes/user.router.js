@@ -11,6 +11,6 @@ userRouter.post('/', userMiddleware.isUserValidForPost,userMiddleware.isUserUniq
 
 userRouter.get('/:id', commonMiddleware.isIdValid, userMiddleware.isUserPresent, userController.getUser)
 userRouter.delete('/:id', commonMiddleware.isIdValid, authMiddleware.checkAccessToken , userMiddleware.isUserPresent, userController.deleteUser)
-userRouter.put('/:id', commonMiddleware.isIdValid, userMiddleware.isUserValidForUpdate, userMiddleware.isUserPresent, userController.updateUser)
+userRouter.put('/:id', commonMiddleware.isIdValid, authMiddleware.checkAccessToken, userMiddleware.isUserValidForUpdate, userMiddleware.isUserPresent, userController.updateUser)
 
 module.exports = userRouter;
