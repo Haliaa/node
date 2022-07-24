@@ -2,14 +2,17 @@ const express = require("express");
 const userRouter = require('./routes/user.router')
 const authRouter = require('./routes/auth.router')
 const mongoose = require("mongoose");
+const {PORT,MONGO_URL} = require('./configs/configs');
+const path = require("path");
+
+require('dotenv').config({path: path.join(process.cwd(), 'environments', `${process.env.MODE}.env`)})
 
 const app = express();
 
 app.use(express.json())
 // app.use(express.urlencoded({extended:true}))
 
-mongoose.connect('mongodb://localhost:27017/dec')
-
+mongoose.connect(MONGO_URL)
 
 app.use('/users', userRouter)
 app.use('/auth', authRouter)
@@ -29,6 +32,6 @@ app.use('*', (req, res)=>{
 })
 
 
-app.listen(5000, () => {
-    console.log('Service is listening port 5000')
+app.listen(PORT, () => {
+    console.log(`Service is listening port ${PORT}`)
 })
