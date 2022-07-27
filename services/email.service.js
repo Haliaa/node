@@ -19,13 +19,16 @@ module.exports = {
 
     const hbsOptions = {
       viewEngine: {
-        extname: '.hbs', //так як тут вказано hbs то можна створювати файли main.hbs замість main.handlebars
+        extname: '.hbs',
+        //так як тут вказано hbs то можна створювати файли main.hbs замість main.handlebars
+        // для layouts, partials
         defaultLayout: 'main',
         layoutsDir: path.join(process.cwd(), 'email-templates', 'layouts'),
         partialsDir: path.join(process.cwd(), 'email-templates', 'partials'),
       },
       viewPath: path.join(process.cwd(), 'email-templates', 'views'),
       extName: '.hbs',
+       // для views
     }
 
     transporter.use('compile', hbs(hbsOptions));
