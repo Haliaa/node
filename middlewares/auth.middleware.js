@@ -83,5 +83,37 @@ module.exports = {
     } catch (e) {
       next(e);
     }
+  },
+
+  isEmailValid: async (req, res, next) => {
+    try {
+      const {error, value} = await authValidator.forgotPassword.validate(req.body)
+
+      if (error) {
+        return next(new CError('Wrong email'));
+      }
+
+      req.user = value;
+      next();
+    } catch (e) {
+      next(e);
+    }
+  },
+
+    isUserPresentByEmail: async (req, res, next) => {
+    try {
+      const {email} = req.body;
+
+      const user = await findUser({ email });
+
+      if (!user) {
+        return next(new CError('Wrong email'));
+      }
+
+      req.user = user;
+      next();
+    } catch (e) {
+      next(e);
+    }
   }
 }

@@ -1,18 +1,18 @@
 const express = require("express");
-const userRouter = require('./routes/user.router')
-const authRouter = require('./routes/auth.router')
 const mongoose = require("mongoose");
-const {PORT,MONGO_URL} = require('./configs/configs');
 const path = require("path");
-
 require('dotenv').config({path: path.join(process.cwd(), 'environments', `${process.env.MODE}.env`)})
 
-const app = express();
+const userRouter = require('./routes/user.router')
+const authRouter = require('./routes/auth.router')
+const {PORT,MONGO_URL} = require('./configs/configs');
 
+mongoose.connect(MONGO_URL)
+
+const app = express();
 app.use(express.json())
 // app.use(express.urlencoded({extended:true}))
 
-mongoose.connect(MONGO_URL)
 
 app.use('/users', userRouter)
 app.use('/auth', authRouter)

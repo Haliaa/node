@@ -1,6 +1,8 @@
 const {comparePassword} = require('../services/password.service');
 const {generateAuthTokens} = require('../services/token.service');
 const OAuth = require('../dataBase/OAuth');
+const emailService = require("../services/email.service");
+const emailAction = require("../enums/emailAction.enum");
 
 module.exports = {
     login: async (req, res, next) => {
@@ -27,9 +29,11 @@ module.exports = {
     },
     logout: async (req, res, next) => {
         try {
-            const {access_token} = req;
-
+            const {access_token, user} = req;
+            const {name, email} = user
             await OAuth.deleteOne({access_token})
+
+            await emailService.sendMail(email, emailAction.LOGOUT, {name, count: 1}) //count:1 logout з одного девайсу
 
             res.sendStatus(204);
         } catch (e) {
@@ -38,9 +42,11 @@ module.exports = {
     },
     logoutAllDevices: async (req, res, next) => {
         try {
-            const {_id} = req.user;
+            const {_id, name, email} = req.user;
 
-            await OAuth.deleteMany({userId: _id})
+            const {deletedCount} = await OAuth.deleteMany({userId: _id});
+
+            await emailService.sendMail(email, emailAction.LOGOUT, {name, count: deletedCount}) //count:1 logout з одного девайсу
 
             res.sendStatus(204);
         } catch (e) {
@@ -58,6 +64,17 @@ module.exports = {
             await OAuth.create({userId, ...tokens})
 
             res.json(tokens);
+        } catch (e) {
+            next(e)
+        }
+    },
+    forgotPassword: async (req, res, next) => {
+        try {
+            const {name, email} = req.user;
+
+            await emailService.sendMail(email, emailAction.FORGOT_PASSWORD, {name}) //count:1 logout з одного девайсу
+
+            res.sendStatus(204);
         } catch (e) {
             next(e)
         }

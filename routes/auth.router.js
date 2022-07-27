@@ -19,4 +19,10 @@ router.post('/logoutAllDevices',
     authMiddleware.checkAccessToken,
     authController.logoutAllDevices)
 
+router.post('/forgotPassword',
+    authMiddleware.isEmailValid,
+    authMiddleware.isUserPresentByEmail,
+    authController.forgotPassword
+)
+
 module.exports = router;
