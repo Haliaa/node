@@ -2,6 +2,8 @@ require('dotenv').config()
 
 const express = require('express')
 const mongoose = require('mongoose');
+//через mongoose здійснюються запити на mongo
+//з mongo вертається екземпляр класу document(з хламом), хов в консолі того не покаже
 
 mongoose.connect('mongodb://localhost:27017/dec');
 

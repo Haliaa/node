@@ -35,8 +35,8 @@ module.exports = {
     },
     postUser: async (req, res, next) => {
         try {
-            const hashedPassword = await hashPassword(req.body.password);
-            const user = await User.create({...req.body, password:hashedPassword});
+            // const hashedPassword = await hashPassword(req.body.password);
+            const user = await User.createWithHashPassword(req.body);
 
             res.status(201).json(user)
         } catch (e) {

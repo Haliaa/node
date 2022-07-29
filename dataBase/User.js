@@ -1,6 +1,8 @@
 const {Schema ,model} = require("mongoose");
+const passwordService = require('../services/password.service')
+const {raw} = require("express");
 
-const userSchema = new Schema({
+const UserSchema = new Schema({
     name:{
         type:String,
         required:true, //поле обов'язкове для заповнення
@@ -22,6 +24,25 @@ const userSchema = new Schema({
         type:String,
         required:true,
     }
-}, {timestamps:true})
+}, {timestamps:true}) // пише коли створився, коли оновився
+//"_v" - версія, показує скік раз об'єкт оновився
 
-module.exports = model('user', userSchema)
+//1-ИЙ ВАРІК НАПИСАННЯ ФУНКЦІЇ
+UserSchema.methods = { //for SINGLE record // THIS - RECORD
+    async comparePasswords(password){
+         await passwordService.comparePassword(this.password, password);
+    }
+}
+
+//2-ИЙ ВАРІК НАПИСАННЯ ФУНКЦІЇ
+UserSchema.statics = { // for schema(MANY RECORDS) // THIS - SCHEMA
+    createWithHashPassword: async function(userToSave){
+        const hashedPassword = await passwordService.hashPassword(userToSave.password);
+
+
+        //this - це сама UserSchema
+        return this.create({...userToSave, password: hashedPassword})
+    }
+}
+
+module.exports = model('user', UserSchema)

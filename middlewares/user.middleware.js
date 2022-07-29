@@ -35,6 +35,13 @@ module.exports = {
             if(!userByEmail){
                 throw new CError('User not found',404)
             }
+            //НЕ ДОПИШЕ ПОЛЕ:
+            //(ПРИ: const userByEmail = await User.findOne({email});
+            //ДОПИШЕ ПОЛЕ:
+            //(ПРИ: const userByEmail = await User.findOne({email}).lean;
+
+            const resReady = {...userByEmail, appointment:[{}]} // (НЕ допише/допише) поле appointment
+
             req.user = userByEmail;
 
             next()
