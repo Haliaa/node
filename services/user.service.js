@@ -2,7 +2,9 @@ const User = require('../dataBase/User')
 
 module.exports = {
     findUsers:(params={})=>{
-       return User.find(params)
+       return User.find(params) //повертає promise
+                                //return promise
+        //далі обробляємо await-ом в controller
     },
     findUser:(params={})=>{
         return User.findOne(params)

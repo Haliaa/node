@@ -2,7 +2,7 @@ const emailActionTypeEnum = require('../enums/emailAction.enum')
 
 module.exports = {
   [emailActionTypeEnum.WELCOME]: {
-    subject: 'Weclome on board',
+    subject: 'Welcome on board',
     template: 'welcome'
   },
 
