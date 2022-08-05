@@ -23,6 +23,9 @@ const UserSchema = new Schema({
     password:{
         type:String,
         required:true,
+    },
+    avatar:{    // ім'я картинки
+        type:String,
     }
 }, {timestamps:true}) // пише коли створився, коли оновився
 //"_v" - версія, показує скік раз об'єкт оновився

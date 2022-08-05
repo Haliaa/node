@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const express = require('express')
+const expressFileUpload = require('express-fileupload')
 const mongoose = require('mongoose');
 //через mongoose здійснюються запити на mongo
 //з mongo вертається екземпляр класу document(з хламом), хов в консолі того не покаже
@@ -15,11 +16,14 @@ const app = express();
 app.use(express.json())
 app.use(express.urlencoded({extended:true})) //без того буде бачити пустий об'єкт(в консолі: {})
 
+app.use(expressFileUpload())
+
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
 
 //всі ерори злітаються сюди:
 app.use((err, req,res,next)=>{
+    console.log(err)
     res
         .status(err.status || 500)
         .json({

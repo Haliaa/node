@@ -1,6 +1,7 @@
 const User = require('../dataBase/User');
 const CError = require('../error/CustomError')
 const {hashPassword} = require("../services/password.service");
+const {uploadFile} = require("../services/s3.service");
 
 module.exports = {
     getUsers: async (req, res, next) => {
@@ -35,10 +36,23 @@ module.exports = {
     },
     postUser: async (req, res, next) => {
         try {
+
+            console.log('------------');
+            console.log(req.files);
+            console.log('------------');
+
+
+            const avater = 'hggn' // ім'я картинки
+
+
             // const hashedPassword = await hashPassword(req.body.password);
             const user = await User.createWithHashPassword(req.body);
 
-            res.status(201).json(user)
+            const {Location} = await uploadFile(req.files.userAvatar, 'user', user._id); //шлях картинки
+
+            const userWithPhoto = await User.findByIdAndUpdate(user._id,{avatar: Location}, {new:true})
+
+            res.status(201).json(userWithPhoto)
         } catch (e) {
             next(e)
         }
