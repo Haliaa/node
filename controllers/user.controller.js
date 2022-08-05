@@ -2,6 +2,7 @@ const userService = require("../services/user.service");
 const passwordService = require('../services/password.service')
 const emailService = require('../services/email.service')
 const smsService = require('../services/sms.service')
+const s3Service = require('../services/s3.service')
 const smsTemplateBuilder = require('../common/smsTemplateBuilder')
 const emailAction = require('../enums/emailAction.enum')
 const {userPresenter} = require('../presenters/user.presenter')
@@ -24,13 +25,18 @@ module.exports = {
         try {
             const {email, password, name, phone} = req.body;
             const hash = await passwordService.hashPassword(password)
-            const newUser = await userService.createUser({...req.body, password: hash})
+            const user = await userService.createUser({...req.body, password: hash})
+
+            const {Location} = await s3Service.uploadFile(req.files.avatar, 'user', user._id)
+
+            const userWithPhoto = await userService.updateUser({id: user._id}, {avatar: Location})
 
             const sms = smsTemplateBuilder[smsAction.WELCOME](name)
+
             await smsService.sendSMS(phone, sms)
             await emailService.sendMail(email, emailAction.WELCOME, {name})
 
-            const userForResponse = userPresenter(newUser);
+            const userForResponse = userPresenter(userWithPhoto);
 
             res.status(201).json(userForResponse);
         } catch (e) {
