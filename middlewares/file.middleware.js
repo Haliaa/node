@@ -15,7 +15,7 @@ module.exports = {
       if (size>IMAGE_MAX_SIZE) {
         return next(new CError('Max size 3MB'));
       }
-      if (IMAGE_MIMETYPE.includes(mimetype)) {
+      if (!IMAGE_MIMETYPE.includes(mimetype)) {
         return next(new CError('Wrong file type'));
       }
 

@@ -31,6 +31,7 @@ userRouter.delete('/:id',
 userRouter.put('/:id',
     commonMiddleware.isIdValid,
     authMiddleware.checkAccessToken,
+    fileMiddleware.checkUserAvatar,
     userMiddleware.isUserValidForUpdate,
     userMiddleware.isUserPresent,
     userController.updateUser)

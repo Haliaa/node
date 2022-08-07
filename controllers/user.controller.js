@@ -26,17 +26,19 @@ module.exports = {
             const {email, password, name, phone} = req.body;
             const hash = await passwordService.hashPassword(password)
             const user = await userService.createUser({...req.body, password: hash})
+            console.log(user) //Olaf
 
             const {Location} = await s3Service.uploadFile(req.files.avatar, 'user', user._id)
 
-            const userWithPhoto = await userService.updateUser({id: user._id}, {avatar: Location})
+            const userWithPhoto = await userService.updateUser({_id: user._id}, {avatar: Location})
 
             const sms = smsTemplateBuilder[smsAction.WELCOME](name)
+            // console.log(userWithPhoto)//olivka
 
-            await smsService.sendSMS(phone, sms)
+            // await smsService.sendSMS(phone, sms) //sms-sender
             await emailService.sendMail(email, emailAction.WELCOME, {name})
-
             const userForResponse = userPresenter(userWithPhoto);
+            // console.log(userForResponse) //olivka
 
             res.status(201).json(userForResponse);
         } catch (e) {
@@ -58,7 +60,11 @@ module.exports = {
         try {
             const {id} = req.params;
 
-            await userService.deleteUser({_id: id})
+            await userService.deleteUser({_id: id});
+
+            if(req.user.avatar){
+                await s3Service.deleteFile(req.user.avatar)
+            }
 
             res.sendStatus(204);
         } catch (e) {
@@ -68,6 +74,18 @@ module.exports = {
     updateUser: async (req, res, next) => {
         try {
             const {id} = req.params;
+
+            if (req.files?.avatar) {
+                if (req.user.avatar) {
+                    const {Location} = await s3Service.updateFile(req.files.avatar, req.user.avatar);
+                    req.body.avatar = Location
+                }
+
+                const {Location} = await s3Service.uploadFile(req.files.avatar, 'user', id)
+                req.body.avatar = Location
+            }
+
+
             const updatedUser = await userService.updateUser({_id: id}, req.body);
             const userForResponse = userPresenter(updatedUser);
 
