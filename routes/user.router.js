@@ -6,13 +6,17 @@ const commonMiddleware = require('../middlewares/common.middleware')
 const userMiddleware = require('../middlewares/user.middleware')
 const authMiddleware = require('../middlewares/auth.middleware')
 const fileMiddleware = require('../middlewares/file.middleware')
+const userValidator = require("../validators/user.validator");
+const queryValidator = require("../validators/query.validaor");
 
 userRouter.get('/',
-    userMiddleware.isUserQueryValid,
+    // userMiddleware.isUserQueryValid,
+    commonMiddleware.isDateValid(queryValidator.findAll, 'query'),
     userController.getUsers)
 
 userRouter.post('/',
-    userMiddleware.isUserValidForPost,
+    // userMiddleware.isUserValidForPost,
+    commonMiddleware.isDateValid(userValidator.newUserValidator),
     fileMiddleware.checkUserAvatar,
     userMiddleware.isUserUnique,
     userController.postUsers)
@@ -32,7 +36,8 @@ userRouter.put('/:id',
     commonMiddleware.isIdValid,
     authMiddleware.checkAccessToken,
     fileMiddleware.checkUserAvatar,
-    userMiddleware.isUserValidForUpdate,
+    // userMiddleware.isUserValidForUpdate,
+    commonMiddleware.isDateValid(userValidator.updateUserValidator),
     userMiddleware.isUserPresent,
     userController.updateUser)
 

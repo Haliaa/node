@@ -26,19 +26,27 @@ module.exports = {
             const {email, password, name, phone} = req.body;
             const hash = await passwordService.hashPassword(password)
             const user = await userService.createUser({...req.body, password: hash})
-            console.log(user) //Olaf
 
             const {Location} = await s3Service.uploadFile(req.files.avatar, 'user', user._id)
 
             const userWithPhoto = await userService.updateUser({_id: user._id}, {avatar: Location})
 
             const sms = smsTemplateBuilder[smsAction.WELCOME](name)
-            // console.log(userWithPhoto)//olivka
 
+            //якщо хоч один буде поганий(rejected) то все завалиться↓
+            // Promise.all()
+
+            //Відпрацює навіть якщо всі будуть погані(rejected)↓
+            await Promise.allSettled([
+                smsService.sendSMS(phone, sms),
+                emailService.sendMail(email, emailAction.WELCOME, {name})
+            ])
+
+            //погана практика, бо двоє сервісів можуть запускатись одночасно, а не чекати своєї черги
             // await smsService.sendSMS(phone, sms) //sms-sender
-            await emailService.sendMail(email, emailAction.WELCOME, {name})
+            // await emailService.sendMail(email, emailAction.WELCOME, {name})
+
             const userForResponse = userPresenter(userWithPhoto);
-            // console.log(userForResponse) //olivka
 
             res.status(201).json(userForResponse);
         } catch (e) {
