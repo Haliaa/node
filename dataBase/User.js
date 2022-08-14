@@ -1,6 +1,5 @@
 const {Schema ,model} = require("mongoose");
 const passwordService = require('../services/password.service')
-const {raw} = require("express");
 
 const UserSchema = new Schema({
     name:{

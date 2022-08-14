@@ -9,7 +9,8 @@ module.exports = {
             if (error) {
                 throw new CError(error.details[0].message)
             }
-            console.log(value); // value це вже провалідовані joi коректні дані
+            // console.log(value); // value це вже провалідовані joi коректні дані
+
             req.body = value; //тепер body точно коректний віддаємо дальше
             next()
         } catch (e) {
@@ -40,7 +41,7 @@ module.exports = {
             //ДОПИШЕ ПОЛЕ:
             //(ПРИ: const userByEmail = await User.findOne({email}).lean;
 
-            const resReady = {...userByEmail, appointment:[{}]} // (НЕ допише/допише) поле appointment
+            // const resReady = {...userByEmail, appointment:[{}]} // (НЕ допише/допише) поле appointment
 
             req.user = userByEmail;
 

@@ -1,6 +1,5 @@
 const User = require('../dataBase/User');
 const CError = require('../error/CustomError')
-const {hashPassword} = require("../services/password.service");
 const {uploadFile} = require("../services/s3.service");
 
 module.exports = {
@@ -37,12 +36,9 @@ module.exports = {
     postUser: async (req, res, next) => {
         try {
 
-            console.log('------------');
-            console.log(req.files);
-            console.log('------------');
-
-
-            const avater = 'hggn' // ім'я картинки
+            // console.log('------------');
+            // console.log(req.files); //виводить то що ви передаємо в постмані
+            // console.log('------------');
 
 
             // const hashedPassword = await hashPassword(req.body.password);

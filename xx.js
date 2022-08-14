@@ -34,3 +34,15 @@
 //     }
 // }
 // console.log(tempInfo) //{ W: { s: 'Wel' } }
+
+const dayjs = require('dayjs')
+
+const oneMonthBeforeNow = dayjs().subtract(1, 'months')
+
+console.log(oneMonthBeforeNow.toString())
+console.log('HELLO FROM XX.JS !!!!!!!!!!!!!')
+
+// dayjs().subtract(1, 'months')
+
+
+

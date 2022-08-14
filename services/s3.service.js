@@ -17,6 +17,7 @@ const uploadFile = async (file, itemType, itemId) => {
         Bucket: AWS_S3_BUCKET,
         Key,
         ACL: 'public-read', //access control list
+        ContentType:file.mimetype, //щоб комп розумів що це зображення і відкривав в експлорері а не завантажував зразу
         Body: file.data
     }) // по дефолту ф-я .upload є колбеком, а треба вже промісифікоману ф-ю, щоб повертало Location (в user.controller)
         .promise() //тому промісифікуємо
