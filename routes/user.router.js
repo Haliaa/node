@@ -19,7 +19,7 @@ userRouter.post('/',
     commonMiddleware.isDateValid(userValidator.newUserValidator),
     fileMiddleware.checkUserAvatar,
     userMiddleware.isUserUnique,
-    userController.postUsers)
+    userController.postUser)
 
 userRouter.get('/:id',
     commonMiddleware.isIdValid,

@@ -21,7 +21,7 @@ module.exports = {
             next(e)
         }
     },
-    postUsers: async (req, res, next) => {
+    postUser: async (req, res, next) => {
         try {
             const {email, password, name, phone} = req.body;
             const hash = await passwordService.hashPassword(password)
@@ -37,6 +37,7 @@ module.exports = {
             // Promise.all()
 
             //Відпрацює навіть якщо всі будуть погані(rejected)↓
+
             await Promise.allSettled([
                 smsService.sendSMS(phone, sms),
                 emailService.sendMail(email, emailAction.WELCOME, {name})
