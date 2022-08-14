@@ -14,6 +14,7 @@ module.exports = {
             next(e)
         }
     },
+
     isDateValid: (validationScheme, dataType = 'body') => async (req, res, next) => {
         try {
             const {error, value} = validationScheme.validate(req[dataType]);
