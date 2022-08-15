@@ -15,6 +15,7 @@ app.use(express.json())
 // app.use(express.urlencoded({extended:true}))
 
 app.use(expressFileUpload());
+
 app.use('/ping', (req, res)=>res.json('pong'))
 app.use('/auth', authRouter)
 app.use('/users', userRouter)
