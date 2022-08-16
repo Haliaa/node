@@ -17,6 +17,7 @@ app.use(express.json())
 app.use(expressFileUpload());
 
 app.use('/ping', (req, res)=>res.json('PONG'))
+app.use('/aku', (req, res)=>res.json('tagAVA'))
 app.use('/auth', authRouter)
 app.use('/users', userRouter)
 
