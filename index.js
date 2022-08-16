@@ -1,5 +1,5 @@
-//https://dec2021-dev.herokuapp.com/users
-//https://dec2021.herokuapp.com/users
+//https://dec2021-dev.herokuapp.com/users dev
+//https://dec2021.herokuapp.com/users     prod
 
 const express = require("express");
 const mongoose = require("mongoose");
