@@ -15,6 +15,7 @@ require('dotenv').config()
 
 const express = require('express')
 const expressFileUpload = require('express-fileupload')
+const swaggerUi = require('swagger-ui-express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
@@ -24,8 +25,11 @@ const userRouter = require('./routes/user.router')
 const authRouter = require('./routes/auth.router')
 const {NODE_ENV, CORS_WHITE_LIST} = require("./constants/config");
 const cronRun = require("./cron");
+const swaggerJson = require("./swagger.json");
 
 const app = express();
+
+
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true})) //без того буде бачити пустий об'єкт(в консолі: {})
@@ -42,6 +46,10 @@ app.use(expressFileUpload());
 //cors(_configureCors()) - покриває лиш один ендпоінт як middleware
 app.use('/auth', cors(_configureCors()),authRouter);
 app.use('/users', userRouter);
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJson))
+// app.use('/docs', swaggerUi.serve)
+// app.get('/docs', swaggerUi.setup(swaggerJson))
+
 
 //всі ерори злітаються сюди:
 app.use((err, req, res, next) => {

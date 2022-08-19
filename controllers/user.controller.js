@@ -1,13 +1,14 @@
 const User = require('../dataBase/User');
 const CError = require('../error/CustomError')
 const {uploadFile} = require("../services/s3.service");
+const userService = require("../services/user.service");
 
 module.exports = {
     getUsers: async (req, res, next) => {
         try {
-            const users = await User.find();
+            const paginationResponse = await userService.getUsersWithPagination(req.query)
 
-            res.json(users);
+            res.json(paginationResponse);
         } catch (e) {
             next(e)
         }
@@ -46,7 +47,7 @@ module.exports = {
 
             const {Location} = await uploadFile(req.files.userAvatar, 'user', user._id); //шлях картинки
 
-            const userWithPhoto = await User.findByIdAndUpdate(user._id,{avatar: Location}, {new:true})
+            const userWithPhoto = await User.findByIdAndUpdate(user._id, {avatar: Location}, {new: true})
 
             res.status(201).json(userWithPhoto)
         } catch (e) {
