@@ -3,8 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
 </head>
 <body>
 <img src="https://dec-2021.s3.amazonaws.com/user/62ebc3ee5fd1cc3b5cd01d11/b114c42c-97de-4d32-bbc9-b23d927d5d27.jpg" alt="">
+
+<button id="sendMessage"> SEND MESSAGE </button>
+<button id="joinRoom1"> JOIN ROOM 1 </button>
+<button id="joinRoom2"> JOIN ROOM 2 </button>
+
+<script>
+    const socket = io('http://localhost:5000',{
+        auth:{token:"123"},
+        query:{"my-key":"my-value"}
+    });
+    // console.log(socket)
+    // socket.on('connectSuccess', (data)=>{
+    //     console.log(data, 'FROM BE');
+    // })
+
+    let sendMsgBtn = document.getElementById('sendMessage');
+    let joinRoom1 = document.getElementById('joinRoom1');
+    let joinRoom2 = document.getElementById('joinRoom2');
+
+    sendMsgBtn.onclick = ()=>{
+        socket.emit('sendMessage', {message:'Привіт програмєрка'})
+    }
+
+    joinRoom1.onclick = ()=>{
+        socket.emit('room:join', {roomId:'1'})
+    }
+    joinRoom2.onclick = ()=>{
+        socket.emit('room:join', {roomId:'2'})
+    };
+
+    socket.on('message:received', (messageData)=>{
+        document.write(JSON.stringify(messageData, null, 2))
+    });
+
+    socket.on('globalBroadcast', (message) => {
+        alert(message)
+    });
+
+    socket.on('room:newMember', ({id}) => {
+        alert(`New user ${id} joined`)
+    });
+
+</script>
+
 </body>
 </html>
