@@ -7,19 +7,19 @@
     "start:prod": "set MODE=prod&& node ."
   },
   "dependencies": {
-    "aws-sdk": "^2.1189.0",
+    "aws-sdk": "^2.1204.0",
     "bcrypt": "^5.0.1",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "express-fileupload": "^1.4.0",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.4.4",
-    "nodemailer": "^6.7.7",
+    "mongoose": "^6.5.3",
+    "nodemailer": "^6.7.8",
     "nodemailer-express-handlebars": "^5.0.0",
     "nodemon": "^2.0.19",
-    "npm-package-myfirst1233t": "^1.0.0",
-    "twilio": "^3.80.0",
+    "npm-package-myfirst1233t": "^1.0.1",
+    "twilio": "^3.81.0",
     "uuid": "^8.3.2"
   }
 }

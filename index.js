@@ -1,6 +1,11 @@
 //https://dec2021-dev.herokuapp.com/users dev
 //https://dec2021.herokuapp.com/users     prod
 
+//оновлює версії всіх файлів до найновіших в package.json
+//P.S.перед оновленням треба видалити: node modules, package-lock.json
+// npm update --save
+
+
 const express = require("express");
 const mongoose = require("mongoose");
 const expressFileUpload = require('express-fileupload');
