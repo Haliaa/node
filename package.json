@@ -6,7 +6,6 @@
     "start:dev": "set MODE=dev&& nodemon .",
     "start:prod": "set MODE=prod&& node ."
   },
-
   "dependencies": {
     "aws-sdk": "^2.1189.0",
     "bcrypt": "^5.0.1",
