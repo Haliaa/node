@@ -1,7 +1,7 @@
 const Joi = require("joi");
-const npmPackageFirst = require("npm-package-myfirst1233t");
+const {EMAIL_REGEX, PASSWORD_REGEX, PHONE_REGEX} = require("npm-package-myfirst1233t/constants/regex");
 
-const {EMAIL_REGEX, PASSWORD_REGEX, PHONE_REGEX} = require("../constants/constant");
+// const {EMAIL_REGEX, PASSWORD_REGEX, PHONE_REGEX} = require("../constants/constant");
 
 module.exports = {
     nameValidator: Joi.string().alphanum().min(2).max(100),
