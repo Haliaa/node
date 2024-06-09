@@ -1,3 +1,3 @@
-# Repository for Angular course practical part
+# Repository for Node course practical part
 
 Another branch - another lesson.
